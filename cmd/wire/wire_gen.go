@@ -7,22 +7,41 @@
 package wire
 
 import (
+	"github.com/google/wire"
 	"github.com/kalougata/mall/api/v1/admin"
 	"github.com/kalougata/mall/api/v1/mall"
+	"github.com/kalougata/mall/controller/admin"
 	"github.com/kalougata/mall/pkg/app"
+	"github.com/kalougata/mall/pkg/data"
+	"github.com/kalougata/mall/repo/admin"
 	"github.com/kalougata/mall/router/admin"
 	"github.com/kalougata/mall/router/mall"
+	"github.com/kalougata/mall/service/admin"
 	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
 func NewApp(config *viper.Viper) (*app.Server, func(), error) {
-	adminAPIRouter := adminv1.NewAdminAPIRouter()
+	dataData, cleanup, err := data.NewData(config)
+	if err != nil {
+		return nil, nil, err
+	}
+	umsAdminRepo := adminrepo.NewUmsAdminRepo(dataData)
+	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo)
+	umsAdminController := adminctrl.NewUmsAdminController(umsAdminService)
+	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController)
 	adminHTTPServer := adminrouter.NewAdminHTTPServer(adminAPIRouter)
 	mallAPIRouter := mallv1.NewMallAPIRouter()
 	mallHTTPServer := mallrouter.NewMallHTTPServer(mallAPIRouter)
 	server := app.NewServer(adminHTTPServer, mallHTTPServer)
 	return server, func() {
+		cleanup()
 	}, nil
 }
+
+// wire.go:
+
+var AdminProvider = wire.NewSet(adminrepo.NewUmsAdminRepo, adminsrv.NewUmsAdminService, adminctrl.NewUmsAdminController, adminv1.NewAdminAPIRouter, adminrouter.NewAdminHTTPServer)
+
+var MallProvider = wire.NewSet(mallv1.NewMallAPIRouter, mallrouter.NewMallHTTPServer)
