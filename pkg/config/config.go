@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -21,10 +20,10 @@ func NewConfig() *viper.Viper {
 	dir, _ := os.Getwd()
 
 	// 读取路径: 项目根路径/configs/
-	v.AddConfigPath(filepath.Join(dir, "configs"))
+	v.AddConfigPath(dir)
 
-	// 配置文件名称 application-dev.yaml or application-prod.yaml
-	v.SetConfigName(fmt.Sprintf("application-%s", *envPtr))
+	// 配置文件名称
+	v.SetConfigName(fmt.Sprintf("config-%s", *envPtr))
 
 	// 配置文件类型
 	v.SetConfigType("yaml")
