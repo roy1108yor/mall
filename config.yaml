@@ -10,7 +10,7 @@ database:
     port: 3306
     user: 
     passwd:
-    db_name:
+    db:
     config: 
 
 redis:
