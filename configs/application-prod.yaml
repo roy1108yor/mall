@@ -1,0 +1,25 @@
+server:
+  admin:
+    port: 8001
+  mall:
+    port: 8000
+  level: debug
+
+database:
+    host: 127.0.0.1
+    port: 3306
+    user: 
+    passwd:
+    db_name:
+    config: 
+
+redis:
+    host: 127.0.0.1
+    port: 6379
+    user:
+    passwd:
+    db: 0
+
+jwt:
+  admin:
+  mall:

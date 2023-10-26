@@ -7,17 +7,17 @@
 package wire
 
 import (
-	"github.com/google/wire"
 	"github.com/kalougata/mall/api/v1/admin"
 	"github.com/kalougata/mall/api/v1/mall"
 	"github.com/kalougata/mall/pkg/app"
 	"github.com/kalougata/mall/router/admin"
 	"github.com/kalougata/mall/router/mall"
+	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
 
-func NewApp() (*app.Server, func(), error) {
+func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 	adminAPIRouter := adminv1.NewAdminAPIRouter()
 	adminHTTPServer := adminrouter.NewAdminHTTPServer(adminAPIRouter)
 	mallAPIRouter := mallv1.NewMallAPIRouter()
@@ -26,7 +26,3 @@ func NewApp() (*app.Server, func(), error) {
 	return server, func() {
 	}, nil
 }
-
-// wire.go:
-
-var ServerProvider = wire.NewSet()
