@@ -2,6 +2,7 @@ package adminrepo
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kalougata/mall/model"
 	"github.com/kalougata/mall/pkg/data"
@@ -20,6 +21,7 @@ type UmsAdminRepo interface {
 // Save implements UmsAdminRepo.
 func (repo *umsAdminRepo) Save(c context.Context, admin *model.UmsAdmin) error {
 	if _, err := repo.Data.DB.Context(c).Insert(admin); err != nil {
+		fmt.Println(err)
 		return e.ErrInternalServer().WithErr(err)
 	}
 

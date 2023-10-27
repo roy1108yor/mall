@@ -2,6 +2,7 @@ package adminsrv
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/kalougata/mall/model"
@@ -60,9 +61,11 @@ func (us *umsAdminService) UmsAdminLogin(c context.Context, reqData *model.UmsAd
 		UserId:   admin.ID,
 		UserName: admin.UserName,
 	}
-	expiresAt := time.Now().Add(time.Minute * 10)
-	secret := us.conf.GetString("jwt.admin.secret")
-	token, _ := jwt.GenToken(claims, expiresAt, secret)
+	// secret := us.conf.GetString("jwt.admin.secret")
+	token, err := jwt.GenToken(claims, time.Now().Add(time.Minute*10), "admin")
+	if err != nil {
+		fmt.Println(err)
+	}
 	respData := &model.UmsAdminLoginResp{
 		ID:       admin.ID,
 		UserName: admin.UserName,

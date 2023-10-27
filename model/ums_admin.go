@@ -6,7 +6,7 @@ type UmsAdmin struct {
 	ID          uint      `xorm:"not null pk autoincr BIGINT(20) id"`
 	CreatedAt   time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt   time.Time `xorm:"updated TIMESTAMP updated_at"`
-	DeletedAt   time.Time `xorm:"deleted TIMESTAMP deleted_at"`
+	DeletedAt   time.Time `xorm:"deleted DATETIME deleted_at"`
 	UserName    string    `xorm:"not null unique VARCHAR(50) user_name comment('管理员登录账号')"`
 	NickName    string    `xorm:"null VARCHAR(50) nick_name comment('管理员昵称')"`
 	Passwd      string    `xorm:"not null VARCHAR(60) passwd comment('管理员登录密码')"`

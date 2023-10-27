@@ -52,7 +52,11 @@ func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	}
 
 	data.RegIpAddr = c.IP()
-	return response.Build(c, uc.service.UmsAdminRegister(c.Context(), data), nil)
+	if err := uc.service.UmsAdminRegister(c.Context(), data); err != nil {
+		return response.Build(c, e.ErrInternalServer().WithMsg("注册失败, 请稍后再试"), nil)
+	}
+
+	return response.Build(c, nil, nil)
 }
 
 func NewUmsAdminController(service adminsrv.UmsAdminService) UmsAdminController {
