@@ -21,3 +21,7 @@ func ErrInternalServer() *Error {
 func ErrInvalidRequestBody() *Error {
 	return New(http.StatusUnprocessableEntity, "字段校验失败, 请查看errs中的提示信息")
 }
+
+func ErrNotFound() *Error {
+	return New(http.StatusNotFound, "not found")
+}

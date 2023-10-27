@@ -21,7 +21,7 @@ type UmsAdminController interface {
 }
 
 // UmsAdminLogin implements UmsAdminController.
-func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
+func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data := &model.UmsAdminLoginReq{}
 	if err := c.BodyParser(data); err != nil {
 		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
@@ -37,8 +37,19 @@ func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 }
 
 // UmsAdminRegister implements UmsAdminController.
-func (*umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
-	panic("unimplemented")
+func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
+	data := &model.UmsAdminRegisterReq{}
+	if err := c.BodyParser(data); err != nil {
+		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
+	}
+
+	if v := validate.Struct(data); !v.Validate() {
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
+	}
+
+	data.RegIpAddr = c.IP()
+
+	return response.Build(c, nil, "ok!")
 }
 
 func NewUmsAdminController(service adminsrv.UmsAdminService) UmsAdminController {
