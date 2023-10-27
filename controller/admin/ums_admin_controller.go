@@ -1,7 +1,10 @@
 package adminctrl
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gookit/validate"
 	"github.com/kalougata/mall/model"
 	adminsrv "github.com/kalougata/mall/service/admin"
 )
@@ -21,8 +24,14 @@ func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	if err := c.BodyParser(data); err != nil {
 		return err
 	}
+	if v := validate.Struct(data); !v.Validate() {
+		return v.Errors
+	}
 
-	return nil
+	data.LoginIpAddr = c.IP()
+	data.LoginTime = time.Now()
+
+	return c.SendString("ok!")
 }
 
 // UmsAdminRegister implements UmsAdminController.

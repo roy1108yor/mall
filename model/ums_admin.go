@@ -17,15 +17,15 @@ type UmsAdmin struct {
 }
 
 type UmsAdminLoginReq struct {
-	UserName    string    `json:"user_name" validate:"required" message:"required:user_name 必填"`
-	PassWord    string    `json:"password" validate:"required" message:"required:password 必填"`
+	UserName    string    `json:"user_name" validate:"required" message:"required:{field} 必填"`
+	PassWord    string    `json:"password" validate:"required" message:"required:{field} 必填"`
 	LoginIpAddr string    `json:"-"`
 	LoginTime   time.Time `json:"-"`
 }
 
 type UmsAdminRegisterReq struct {
-	UserName  string `json:"user_name" validate:"required|min_len:5" message:"required: user_name必填|min_len: user_name 不能少于5个字符"`
-	PassWord  string `json:"password" validate:"required|min_len:6|max_len:20" message:"required:password 必填|min_len: password 不能少于6个字符|max_len: 不能超过20个字符"`
+	UserName  string `json:"user_name" validate:"required|min_len:5" message:"required:{field} 必填|min_len:{field} 不能少于5个字符"`
+	PassWord  string `json:"password" validate:"required|min_len:6|max_len:20" message:"required:{field} 必填|min_len:{field} 不能少于6个字符|max_len:{field} 不能超过20个字符"`
 	RegIpAddr string `json:"-"`
 }
 
