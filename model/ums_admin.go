@@ -10,7 +10,6 @@ type UmsAdmin struct {
 	UserName    string    `xorm:"not null unique VARCHAR(50) user_name"`
 	NickName    string    `xorm:"null VARCHAR(50) nick_name"`
 	Passwd      string    `xorm:"not null VARCHAR(60) passwd"`
-	Email       string    `xorm:"not null unique VARCHAR(100) email"`
 	RegIpAddr   string    `xorm:"null VARCHAR(15) reg_ip_addr"`
 	LoginIpAddr string    `xorm:"null VARCHAR(15) login_ip_addr"`
 	LoginTime   time.Time `xorm:"null DATETIME login_time"`
