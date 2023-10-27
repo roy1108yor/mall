@@ -6,6 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
 	"github.com/kalougata/mall/model"
+	"github.com/kalougata/mall/pkg/e"
+	"github.com/kalougata/mall/pkg/response"
 	adminsrv "github.com/kalougata/mall/service/admin"
 )
 
@@ -22,16 +24,16 @@ type UmsAdminController interface {
 func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data := &model.UmsAdminLoginReq{}
 	if err := c.BodyParser(data); err != nil {
-		return err
+		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
 	}
 	if v := validate.Struct(data); !v.Validate() {
-		return v.Errors
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
 	}
 
 	data.LoginIpAddr = c.IP()
 	data.LoginTime = time.Now()
 
-	return c.SendString("ok!")
+	return response.Build(c, nil, "ok!")
 }
 
 // UmsAdminRegister implements UmsAdminController.
