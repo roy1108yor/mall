@@ -28,7 +28,7 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 		return nil, nil, err
 	}
 	umsAdminRepo := adminrepo.NewUmsAdminRepo(dataData)
-	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo)
+	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo, config)
 	umsAdminController := adminctrl.NewUmsAdminController(umsAdminService)
 	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController)
 	adminHTTPServer := adminrouter.NewAdminHTTPServer(adminAPIRouter)
