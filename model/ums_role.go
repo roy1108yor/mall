@@ -14,6 +14,12 @@ type UmsRole struct {
 	DeletedAt   time.Time `xorm:"deleted DATETIME deleted_at comment('删除时间')"`
 }
 
+type UmsRoleReq struct {
+	Name        string `json:"name" validate:"required|min_len:2" message:"required:{field} 必填|min_len:{field} 不能少于2个字符"`
+	Description string `json:"description"`
+	Status      int    `json:"status" validate:"required|int|min:0|max:1" message:"required:{field} 必填|int:{field} 必须是整数类型|min:{field} 应该是0或1|max:{field} 应该是0或1"`
+}
+
 func (UmsRole) TableName() string {
 	return "t_ums_role"
 }
