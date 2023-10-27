@@ -7,12 +7,12 @@ type UmsAdmin struct {
 	CreatedAt   time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt   time.Time `xorm:"updated TIMESTAMP updated_at"`
 	DeletedAt   time.Time `xorm:"deleted TIMESTAMP deleted_at"`
-	UserName    string    `xorm:"not null unique VARCHAR(50) user_name"`
-	NickName    string    `xorm:"null VARCHAR(50) nick_name"`
-	Passwd      string    `xorm:"not null VARCHAR(60) passwd"`
-	RegIpAddr   string    `xorm:"null VARCHAR(15) reg_ip_addr"`
-	LoginIpAddr string    `xorm:"null VARCHAR(15) login_ip_addr"`
-	LoginTime   time.Time `xorm:"null DATETIME login_time"`
+	UserName    string    `xorm:"not null unique VARCHAR(50) user_name comment('管理员登录账号')"`
+	NickName    string    `xorm:"null VARCHAR(50) nick_name comment('管理员昵称')"`
+	Passwd      string    `xorm:"not null VARCHAR(60) passwd comment('管理员登录密码')"`
+	RegIpAddr   string    `xorm:"null VARCHAR(15) reg_ip_addr comment('注册时候的IP地址')"`
+	LoginIpAddr string    `xorm:"null VARCHAR(15) login_ip_addr comment('最后一次登录的IP地址')"`
+	LoginTime   time.Time `xorm:"null DATETIME login_time comment('最后一次登录时间')"`
 }
 
 type UmsAdminLoginReq struct {
@@ -35,6 +35,6 @@ type UmsAdminLoginResp struct {
 	Token    string `json:"token"`
 }
 
-func (UmsAdmin) TableName() string {
+func (u *UmsAdmin) TableName() string {
 	return "t_ums_admin"
 }

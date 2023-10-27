@@ -6,6 +6,7 @@ import (
 
 	"github.com/kalougata/mall/model"
 	"github.com/kalougata/mall/pkg/e"
+	"github.com/kalougata/mall/pkg/hash"
 	"github.com/kalougata/mall/pkg/jwt"
 	adminrepo "github.com/kalougata/mall/repo/admin"
 	"github.com/spf13/viper"
@@ -33,7 +34,7 @@ func (us *umsAdminService) UmsAdminRegister(c context.Context, reqData *model.Um
 
 	admin := &model.UmsAdmin{
 		UserName:  reqData.UserName,
-		Passwd:    reqData.PassWord,
+		Passwd:    hash.Gen(reqData.PassWord),
 		RegIpAddr: reqData.RegIpAddr,
 	}
 
@@ -48,6 +49,10 @@ func (us *umsAdminService) UmsAdminLogin(c context.Context, reqData *model.UmsAd
 	}
 	if err != nil {
 		return nil, err
+	}
+
+	if !hash.Check(reqData.PassWord, admin.Passwd) {
+		return nil, e.ErrBadRequest().WithMsg("账号或密码错误")
 	}
 
 	// 生成Token
