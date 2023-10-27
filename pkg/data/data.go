@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/spf13/viper"
 	"xorm.io/xorm"
@@ -22,7 +23,7 @@ func NewData(conf *viper.Viper) (*Data, func(), error) {
 		conf.GetInt("database.port"),
 		conf.GetString("database.db"),
 	)
-	db, err := xorm.NewEngine("mysql", dsn)
+	db, err := xorm.NewEngine(conf.GetString("database.driver"), dsn)
 
 	if err != nil {
 		return nil, nil, err
