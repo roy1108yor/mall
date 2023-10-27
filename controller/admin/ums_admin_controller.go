@@ -2,6 +2,7 @@ package adminctrl
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/kalougata/mall/model"
 	adminsrv "github.com/kalougata/mall/service/admin"
 )
 
@@ -16,7 +17,12 @@ type UmsAdminController interface {
 
 // UmsAdminLogin implements UmsAdminController.
 func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
-	panic("unimplemented")
+	data := &model.UmsAdminLoginReq{}
+	if err := c.BodyParser(data); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // UmsAdminRegister implements UmsAdminController.
