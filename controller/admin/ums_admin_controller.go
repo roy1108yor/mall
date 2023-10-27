@@ -20,7 +20,7 @@ type UmsAdminController interface {
 	UmsAdminRegister(c *fiber.Ctx) error
 }
 
-// UmsAdminLogin implements UmsAdminController.
+// UmsAdminLogin 管理员登录
 func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data := &model.UmsAdminLoginReq{}
 	if err := c.BodyParser(data); err != nil {
@@ -33,10 +33,14 @@ func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data.LoginIpAddr = c.IP()
 	data.LoginTime = time.Now()
 
-	return response.Build(c, nil, "ok!")
+	if resp, err := uc.service.UmsAdminLogin(c.Context(), data); err == nil {
+		return response.Build(c, nil, resp)
+	} else {
+		return response.Build(c, err, resp)
+	}
 }
 
-// UmsAdminRegister implements UmsAdminController.
+// UmsAdminRegister 管理员注册
 func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	data := &model.UmsAdminRegisterReq{}
 	if err := c.BodyParser(data); err != nil {
@@ -48,8 +52,7 @@ func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	}
 
 	data.RegIpAddr = c.IP()
-
-	return response.Build(c, nil, "ok!")
+	return response.Build(c, uc.service.UmsAdminRegister(c.Context(), data), nil)
 }
 
 func NewUmsAdminController(service adminsrv.UmsAdminService) UmsAdminController {
