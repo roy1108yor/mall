@@ -11,10 +11,16 @@ type umsAdminController struct {
 
 type UmsAdminController interface {
 	UmsAdminLogin(c *fiber.Ctx) error
+	UmsAdminRegister(c *fiber.Ctx) error
 }
 
 // UmsAdminLogin implements UmsAdminController.
 func (*umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
+	panic("unimplemented")
+}
+
+// UmsAdminRegister implements UmsAdminController.
+func (*umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	panic("unimplemented")
 }
 

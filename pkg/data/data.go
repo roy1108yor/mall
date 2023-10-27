@@ -23,6 +23,7 @@ func NewData(conf *viper.Viper) (*Data, func(), error) {
 		conf.GetInt("database.port"),
 		conf.GetString("database.db"),
 	)
+
 	db, err := xorm.NewEngine(conf.GetString("database.driver"), dsn)
 
 	if err != nil {
