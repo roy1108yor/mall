@@ -8,7 +8,6 @@ type UmsRoleRelation struct {
 	RoleID    uint      `xorm:"not null BITINT(20) role_id comment('角色ID')"`
 	CreatedAt time.Time `xorm:"created TIMESTAMP created_at comment('创建时间')"`
 	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at comment('更新时间')"`
-	DeletedAt time.Time `xorm:"deleted DATETIME deleted_at comment('删除时间')"`
 }
 
 func (r *UmsRoleRelation) TableName() string {
