@@ -14,7 +14,17 @@ type umsRoleService struct {
 
 type UmsRoleService interface {
 	AddRole(c context.Context, reqData *model.AddUmsRoleReq) error
+	UpdateRole(c context.Context, reqData *model.UpdateUmsRoleReq) error
 	BatchDeleteRole(c context.Context, ids []string) error
+}
+
+// UpdateRole implements UmsRoleService.
+func (rs *umsRoleService) UpdateRole(c context.Context, reqData *model.UpdateUmsRoleReq) error {
+	if err := rs.repo.Update(c, reqData.ToModel()); err != nil {
+		return e.ErrInternalServer().WithMsg("更新角色失败, 请稍后再试")
+	}
+
+	return nil
 }
 
 // AddRole 添加一个角色

@@ -24,12 +24,28 @@ type DelUmsRoleReq struct {
 	Ids []string `json:"ids"`
 }
 
+type UpdateUmsRoleReq struct {
+	ID          uint   `json:"id" validate:"required|int" message:"required:{field} 必填|int:{field} 必须是数字类型"`
+	Name        string `json:"name" validate:"required|min_len:2" message:"required:{field} 必填|min_len:{field} 不能少于2个字符"`
+	Description string `json:"description" validate:"required" message:"required:{field} 必填"`
+	Status      int    `json:"status" validate:"required|int|min:0|max:1" message:"required:{field} 必填|int:{field} 必须是整数类型|min:{field} 应该是0或1|max:{field} 应该是0或1"`
+}
+
 func (r *UmsRole) TableName() string {
 	return "t_ums_role"
 }
 
 func (r *AddUmsRoleReq) ToModel() *UmsRole {
 	return &UmsRole{
+		Name:        r.Name,
+		Description: r.Description,
+		Status:      r.Status,
+	}
+}
+
+func (r *UpdateUmsRoleReq) ToModel() *UmsRole {
+	return &UmsRole{
+		ID:          r.ID,
 		Name:        r.Name,
 		Description: r.Description,
 		Status:      r.Status,

@@ -46,8 +46,19 @@ func (rc *umsRoleController) DeleteRole(c *fiber.Ctx) error {
 }
 
 // UpdateROle 更新角色信息
-func (*umsRoleController) UpdateRole(c *fiber.Ctx) error {
-	panic("unimplemented")
+func (rc *umsRoleController) UpdateRole(c *fiber.Ctx) error {
+	data := &model.UpdateUmsRoleReq{}
+	if err := c.BodyParser(data); err != nil {
+		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
+	}
+	if v := validate.Struct(data); !v.Validate() {
+		return response.Build(c, e.ErrInvalidRequestBody(), v.Errors)
+	}
+	if err := rc.service.UpdateRole(c.Context(), data); err != nil {
+		return response.Build(c, err, nil)
+	}
+
+	return response.Build(c, nil, data)
 }
 
 type UmsRoleController interface {
