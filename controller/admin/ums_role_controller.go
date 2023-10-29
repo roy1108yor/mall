@@ -15,17 +15,18 @@ type umsRoleController struct {
 
 // AddRole 添加角色
 func (rc *umsRoleController) AddRole(c *fiber.Ctx) error {
-	data := &model.UmsRoleReq{}
+	data := &model.AddUmsRoleReq{}
 	if err := c.BodyParser(data); err != nil {
 		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
 	}
 	if v := validate.Struct(data); !v.Validate() {
 		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
 	}
+	if err := rc.service.AddRole(c.Context(), data); err != nil {
+		return response.Build(c, err, nil)
+	}
 
-	rc.service.AddRole(c.Context(), data)
-
-	return nil
+	return response.Build(c, nil, data)
 }
 
 // DeleteRole 批量删除角色

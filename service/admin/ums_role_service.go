@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kalougata/mall/model"
+	"github.com/kalougata/mall/pkg/e"
 	adminrepo "github.com/kalougata/mall/repo/admin"
 )
 
@@ -12,18 +13,20 @@ type umsRoleService struct {
 }
 
 type UmsRoleService interface {
-	AddRole(c context.Context, reqData *model.UmsRoleReq) error
+	AddRole(c context.Context, reqData *model.AddUmsRoleReq) error
 }
 
-// AddRole implements UmsRoleService.
-func (rs *umsRoleService) AddRole(c context.Context, reqData *model.UmsRoleReq) error {
-	roleModel := &model.UmsRole{
-		Name:        reqData.Name,
-		Description: reqData.Description,
-		Status:      reqData.Status,
+// AddRole 添加一个角色
+func (rs *umsRoleService) AddRole(c context.Context, reqData *model.AddUmsRoleReq) error {
+	_, exists, err := rs.repo.SelectByRoleName(c, reqData.Name)
+	if err != nil {
+		return e.ErrInternalServer().WithMsg("创建角色失败, 请稍后再试")
+	}
+	if exists {
+		return e.ErrBadRequest().WithMsg("角色名称已存在")
 	}
 
-	return rs.repo.Save(c, roleModel)
+	return rs.repo.Save(c, reqData.ToModel())
 }
 
 func NewUmsRoleService(repo adminrepo.UmsRoleRepo) UmsRoleService {
