@@ -19,6 +19,26 @@ type UmsRoleRepo interface {
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
 	SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error)
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
+	RemoveById(c context.Context, id uint) error
+	BatchInsert(c context.Context, roles []*model.UmsRole) error
+}
+
+// BatchInsert implements UmsRoleRepo.
+func (repo *umsRoleRepo) BatchInsert(c context.Context, roles []*model.UmsRole) error {
+	if _, err := repo.data.DB.Context(c).Table(&model.UmsRole{}).InsertMulti(roles); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// RemoveById implements UmsRoleRepo.
+func (repo *umsRoleRepo) RemoveById(c context.Context, id uint) error {
+	if _, err := repo.data.DB.Context(c).Where("id = ?", id).Delete(&model.UmsRoleMenuRelation{}); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // SelectById 根据角色ID查找

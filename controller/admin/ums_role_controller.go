@@ -35,7 +35,11 @@ func (rc *umsRoleController) AllocMenuForRole(c *fiber.Ctx) error {
 		return response.Build(c, e.ErrInvalidRequestBody(), v.Errors)
 	}
 
-	return nil
+	if err := rc.service.AllocMenuForRole(c.Context(), data); err != nil {
+		return response.Build(c, err, nil)
+	}
+
+	return response.Build(c, nil, data)
 }
 
 // AddRole 添加角色

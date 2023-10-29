@@ -31,6 +31,16 @@ func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.All
 	}
 
 	// 删除角色原有的关系
+	if err := rs.repo.RemoveById(c, reqData.RoleId); err != nil {
+		return e.ErrInternalServer().WithMsg("分配菜单失败, 请稍后再试").WithErr(err)
+	}
+
+	relation := make([]*model.UmsRoleMenuRelation, len(reqData.MenuIds))
+
+	for i, id := range reqData.MenuIds {
+		relation[i].RoleId = reqData.RoleId
+		relation[i].MenuId = id
+	}
 
 	return nil
 }
