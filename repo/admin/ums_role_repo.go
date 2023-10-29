@@ -17,12 +17,12 @@ type UmsRoleRepo interface {
 	Delete(c context.Context, ids []string) error
 	Update(c context.Context, role *model.UmsRole) error
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
-	SelectList(c context.Context, ids []string) ([]*model.UmsRole, error)
+	SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error)
 }
 
 // Update 更新一个角色
 func (repo *umsRoleRepo) Update(c context.Context, role *model.UmsRole) error {
-	if count, err := repo.data.DB.Context(c).Where("id = ?", role.ID).Update(role); err != nil && count <= 0 {
+	if count, err := repo.data.DB.Context(c).AllCols().ID(role.ID).Update(role); err != nil && count <= 0 {
 		return err
 	}
 
@@ -48,7 +48,7 @@ func (repo *umsRoleRepo) Delete(c context.Context, ids []string) error {
 }
 
 // SelectList implements UmsRoleRepo.
-func (repo *umsRoleRepo) SelectList(c context.Context, ids []string) ([]*model.UmsRole, error) {
+func (repo *umsRoleRepo) SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error) {
 	list := make([]*model.UmsRole, 0)
 	err := repo.data.DB.Context(c).In("id", ids).Find(&list)
 	if err != nil {

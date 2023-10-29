@@ -16,6 +16,12 @@ type UmsRoleService interface {
 	AddRole(c context.Context, reqData *model.AddUmsRoleReq) error
 	UpdateRole(c context.Context, reqData *model.UpdateUmsRoleReq) error
 	BatchDeleteRole(c context.Context, ids []string) error
+	ListRole(c context.Context) (list []*model.UmsRole, err error)
+}
+
+// ListRole implements UmsRoleService.
+func (rs *umsRoleService) ListRole(c context.Context) (list []*model.UmsRole, err error) {
+	return rs.repo.SelectList(c)
 }
 
 // UpdateRole implements UmsRoleService.

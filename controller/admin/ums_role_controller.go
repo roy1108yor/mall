@@ -13,6 +13,18 @@ type umsRoleController struct {
 	service adminsrv.UmsRoleService
 }
 
+type UmsRoleController interface {
+	AddRole(c *fiber.Ctx) error
+	DeleteRole(c *fiber.Ctx) error
+	UpdateRole(c *fiber.Ctx) error
+	AllocMenu(c *fiber.Ctx) error
+}
+
+// AllocMenu implements UmsRoleController.
+func (*umsRoleController) AllocMenu(c *fiber.Ctx) error {
+	panic("unimplemented")
+}
+
 // AddRole 添加角色
 func (rc *umsRoleController) AddRole(c *fiber.Ctx) error {
 	data := &model.AddUmsRoleReq{}
@@ -59,12 +71,6 @@ func (rc *umsRoleController) UpdateRole(c *fiber.Ctx) error {
 	}
 
 	return response.Build(c, nil, data)
-}
-
-type UmsRoleController interface {
-	AddRole(c *fiber.Ctx) error
-	DeleteRole(c *fiber.Ctx) error
-	UpdateRole(c *fiber.Ctx) error
 }
 
 func NewUmsRoleController(service adminsrv.UmsRoleService) UmsRoleController {
