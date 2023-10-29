@@ -49,7 +49,7 @@ func (rs *umsRoleService) AddRole(c context.Context, reqData *model.AddUmsRoleRe
 		return e.ErrInternalServer().WithMsg("创建角色失败, 请稍后再试")
 	}
 	if exists {
-		return e.ErrBadRequest().WithMsg("角色名称已存在")
+		return e.ErrBadRequest().WithMsg(fmt.Sprintf("roleName: %v, 角色名称以存在", reqData.Name))
 	}
 
 	return rs.repo.Save(c, reqData.ToModel())
