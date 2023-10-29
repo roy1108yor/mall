@@ -8,5 +8,5 @@ func (api *AdminAPIRouter) RegisterRoleAPIRouter(r fiber.Router) {
 	r.Patch("/update", api.umsRoleController.UpdateRole)
 
 	// 给角色分配菜单
-	r.Post("/allocMenu", api.umsRoleController.AllocMenu)
+	r.Post("/allocMenu", api.umsRoleController.AllocMenuForRole)
 }

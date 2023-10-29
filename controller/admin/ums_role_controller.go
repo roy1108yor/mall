@@ -19,11 +19,11 @@ type UmsRoleController interface {
 	AddRole(c *fiber.Ctx) error
 	DeleteRole(c *fiber.Ctx) error
 	UpdateRole(c *fiber.Ctx) error
-	AllocMenu(c *fiber.Ctx) error
+	AllocMenuForRole(c *fiber.Ctx) error
 }
 
-// AllocMenu implements UmsRoleController.
-func (rc *umsRoleController) AllocMenu(c *fiber.Ctx) error {
+// AllocMenu 为角色分配菜单
+func (rc *umsRoleController) AllocMenuForRole(c *fiber.Ctx) error {
 	data := &model.AllocMenuForRoleReq{}
 	if err := c.BodyParser(data); err != nil {
 		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)

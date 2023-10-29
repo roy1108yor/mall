@@ -30,6 +30,8 @@ func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.All
 		return e.ErrNotFound().WithMsg(fmt.Sprintf("roleId: %v, 角色不存在", reqData.RoleId))
 	}
 
+	// 删除角色原有的关系
+
 	return nil
 }
 
