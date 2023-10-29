@@ -21,8 +21,8 @@ type UmsMenuInReq struct {
 	ParentId uint   `validate:"uint" json:"parentId"`
 	Name     string `validate:"required" message:"required:{field} 必填项" json:"name"`
 	Icon     string `validate:"required" message:"required:{field} 必填项" json:"icon"`
-	Hidden   int    `validate:"uint" json:"hidden"`
-	Sort     int    `validate:"uint" json:"sort"`
+	Hidden   int    `validate:"int" json:"hidden"`
+	Sort     int    `validate:"int" json:"sort"`
 }
 
 func (r *UmsMenu) TableName() string {
