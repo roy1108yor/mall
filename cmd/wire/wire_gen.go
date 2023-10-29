@@ -30,7 +30,10 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 	umsAdminRepo := adminrepo.NewUmsAdminRepo(dataData)
 	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo, config)
 	umsAdminController := adminctrl.NewUmsAdminController(umsAdminService)
-	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController)
+	umsRoleRepo := adminrepo.NewUmsRoleRepo(dataData)
+	umsRoleService := adminsrv.NewUmsRoleService(umsRoleRepo)
+	umsRoleController := adminctrl.NewUmsRoleController(umsRoleService)
+	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController, umsRoleController)
 	adminHTTPServer := adminrouter.NewAdminHTTPServer(adminAPIRouter)
 	mallAPIRouter := mallv1.NewMallAPIRouter()
 	mallHTTPServer := mallrouter.NewMallHTTPServer(mallAPIRouter)
@@ -42,6 +45,6 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 
 // wire.go:
 
-var AdminProvider = wire.NewSet(adminrepo.NewUmsAdminRepo, adminsrv.NewUmsAdminService, adminctrl.NewUmsAdminController, adminv1.NewAdminAPIRouter, adminrouter.NewAdminHTTPServer)
+var AdminProvider = wire.NewSet(adminrepo.NewUmsAdminRepo, adminrepo.NewUmsRoleRepo, adminsrv.NewUmsAdminService, adminsrv.NewUmsRoleService, adminctrl.NewUmsAdminController, adminctrl.NewUmsRoleController, adminv1.NewAdminAPIRouter, adminrouter.NewAdminHTTPServer)
 
 var MallProvider = wire.NewSet(mallv1.NewMallAPIRouter, mallrouter.NewMallHTTPServer)

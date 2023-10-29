@@ -16,5 +16,8 @@ func NewAdminHTTPServer(
 
 	apiRouter.RegisterGuestAPIRouter(v1Group)
 
+	// 角色路由
+	apiRouter.RegisterRoleAPIRouter(v1Group.Group("/role"))
+
 	return app
 }
