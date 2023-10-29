@@ -31,6 +31,11 @@ type UpdateUmsRoleReq struct {
 	Status      int    `json:"status" validate:"required|int|min:0|max:1" message:"required:{field} 必填|int:{field} 必须是整数类型|min:{field} 应该是0或1|max:{field} 应该是0或1"`
 }
 
+type AllocMenuForRoleReq struct {
+	MenuIds []uint `json:"menuIds" validate:"required"`
+	RoleId  uint   `json:"roleId" validate:"required"`
+}
+
 func (r *UmsRole) TableName() string {
 	return "t_ums_role"
 }

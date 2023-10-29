@@ -18,6 +18,18 @@ type UmsRoleRepo interface {
 	Update(c context.Context, role *model.UmsRole) error
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
 	SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error)
+	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
+}
+
+// SelectById 根据角色ID查找
+func (repo *umsRoleRepo) SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error) {
+	result = &model.UmsRole{}
+	exists, err = repo.data.DB.Context(c).Where("id = ?", id).Get(result)
+	if err != nil {
+		err = e.ErrInternalServer().WithErr(err)
+	}
+
+	return
 }
 
 // Update 更新一个角色
