@@ -16,8 +16,11 @@ func NewAdminHTTPServer(
 
 	apiRouter.RegisterGuestAPIRouter(v1Group)
 
-	// 角色路由
+	// 注册角色路由
 	apiRouter.RegisterRoleAPIRouter(v1Group.Group("/role"))
+
+	// 注册菜单路由
+	apiRouter.RegisterMenuAPIRouter(v1Group.Group("/menu"))
 
 	return app
 }
