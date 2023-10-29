@@ -19,9 +19,9 @@ type UmsMenuController interface {
 
 // AddMenu implements UmsMenuController.
 func (mc *umsMenuController) AddMenu(c *fiber.Ctx) error {
-	data := &model.AddUmsMenuReq{}
+	data := &model.UmsMenuInReq{}
 	if err := c.BodyParser(data); err != nil {
-		return response.Build(c, e.ErrBadRequest().WithErr(err), nil)
+		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
 	}
 	if v := validate.Struct(data); !v.Validate() {
 		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)

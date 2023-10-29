@@ -13,11 +13,11 @@ type umsMenuService struct {
 }
 
 type UmsMenuService interface {
-	AddMenu(c context.Context, reqData *model.AddUmsMenuReq) error
+	AddMenu(c context.Context, reqData *model.UmsMenuInReq) error
 }
 
 // AddMenu 添加分类
-func (ms *umsMenuService) AddMenu(c context.Context, reqData *model.AddUmsMenuReq) error {
+func (ms *umsMenuService) AddMenu(c context.Context, reqData *model.UmsMenuInReq) error {
 	if err := ms.repo.Create(c, reqData.ToModel()); err != nil {
 		return e.ErrInternalServer().WithMsg("添加分类失败, 请稍后再试")
 	}

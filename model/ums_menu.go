@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type UmsMenu struct {
 	ID        uint      `xorm:"not null pk autoincr BIGINT(20) id comment('唯一标识')"`
@@ -15,19 +17,19 @@ type UmsMenu struct {
 	DeletedAt time.Time `xorm:"deleted DATETIME deleted_at comment('删除时间')"`
 }
 
-type AddUmsMenuReq struct {
-	ParentId uint   `json:"parentId" validate:"required|int" message:"required:{field} 必填|int:{field} 必须是数字类型"`
-	Name     string `json:"name" validate:"required" message:"required:{field} 必填"`
-	Icon     string `json:"icon" validate:"required" message:"required:{field} 必填"`
-	Hidden   int    `json:"hidden" validate:"required" message:"required:{field} 必填"`
-	Sort     int    `json:"sort" validate:"required|int" message:"required:{field} 必填|int:{field} 必须是数字类型"`
+type UmsMenuInReq struct {
+	ParentId uint   `validate:"uint" json:"parentId"`
+	Name     string `validate:"required" message:"required:{field} 必填项" json:"name"`
+	Icon     string `validate:"required" message:"required:{field} 必填项" json:"icon"`
+	Hidden   int    `validate:"uint" json:"hidden"`
+	Sort     int    `validate:"uint" json:"sort"`
 }
 
 func (r *UmsMenu) TableName() string {
 	return "t_ums_menu"
 }
 
-func (r *AddUmsMenuReq) ToModel() *UmsMenu {
+func (r *UmsMenuInReq) ToModel() *UmsMenu {
 	return &UmsMenu{
 		ParentID: r.ParentId,
 		Name:     r.Name,

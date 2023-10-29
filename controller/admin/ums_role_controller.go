@@ -35,7 +35,7 @@ func (rc *umsRoleController) AllocMenu(c *fiber.Ctx) error {
 		return response.Build(c, e.ErrInvalidRequestBody(), v.Errors)
 	}
 
-	panic("unimplemented")
+	return nil
 }
 
 // AddRole 添加角色
