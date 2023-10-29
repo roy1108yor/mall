@@ -1,8 +1,6 @@
 package adminctrl
 
 import (
-	"net/http"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
 	"github.com/kalougata/mall/model"
@@ -28,13 +26,6 @@ func (rc *umsRoleController) AllocMenuForRole(c *fiber.Ctx) error {
 	if err := c.BodyParser(data); err != nil {
 		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
 	}
-	if len(data.MenuIds) <= 0 {
-		return response.Build(c, e.New(http.StatusUnprocessableEntity, "menuIds 长度至少为1"), nil)
-	}
-	if v := validate.Struct(data); !v.Validate() {
-		return response.Build(c, e.ErrInvalidRequestBody(), v.Errors)
-	}
-
 	if err := rc.service.AllocMenuForRole(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)
 	}

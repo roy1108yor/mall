@@ -32,8 +32,8 @@ type UpdateUmsRoleReq struct {
 }
 
 type AllocMenuForRoleReq struct {
-	MenuIds []uint `json:"menuIds" validate:"required"`
-	RoleId  uint   `json:"roleId" validate:"required"`
+	RoleId  uint   `json:"roleId"`
+	MenuIds []uint `json:"menuIds"`
 }
 
 func (r *UmsRole) TableName() string {

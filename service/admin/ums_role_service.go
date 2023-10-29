@@ -20,7 +20,7 @@ type UmsRoleService interface {
 	AllocMenuForRole(c context.Context, reqData *model.AllocMenuForRoleReq) error
 }
 
-// AllocMenuForRole implements UmsRoleService.
+// AllocMenuForRole 为角色分配菜单
 func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.AllocMenuForRoleReq) error {
 	_, exists, err := rs.repo.SelectById(c, reqData.RoleId)
 	if err != nil {
@@ -31,15 +31,19 @@ func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.All
 	}
 
 	// 删除角色原有的关系
-	if err := rs.repo.RemoveById(c, reqData.RoleId); err != nil {
+	if err := rs.repo.RemoveByRoleId(c, reqData.RoleId); err != nil {
 		return e.ErrInternalServer().WithMsg("分配菜单失败, 请稍后再试").WithErr(err)
 	}
 
-	relation := make([]*model.UmsRoleMenuRelation, len(reqData.MenuIds))
+	list := make([]*model.UmsRoleMenuRelation, len(reqData.MenuIds))
+	for i, v := range reqData.MenuIds {
+		list[i] = new(model.UmsRoleMenuRelation)
+		list[i].RoleId = reqData.RoleId
+		list[i].MenuId = v
+	}
 
-	for i, id := range reqData.MenuIds {
-		relation[i].RoleId = reqData.RoleId
-		relation[i].MenuId = id
+	if err := rs.repo.BatchInsert(c, list); err != nil {
+		return e.ErrInternalServer().WithMsg("分配菜单失败, 请稍后再试").WithErr(err)
 	}
 
 	return nil
