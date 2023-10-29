@@ -14,6 +14,7 @@ type umsRoleService struct {
 
 type UmsRoleService interface {
 	AddRole(c context.Context, reqData *model.AddUmsRoleReq) error
+	BatchDeleteRole(c context.Context, ids []string) error
 }
 
 // AddRole 添加一个角色
@@ -27,6 +28,15 @@ func (rs *umsRoleService) AddRole(c context.Context, reqData *model.AddUmsRoleRe
 	}
 
 	return rs.repo.Save(c, reqData.ToModel())
+}
+
+// BatchUpdateRole 删除角色, 支持批量删除
+func (rs *umsRoleService) BatchDeleteRole(c context.Context, ids []string) error {
+	if err := rs.repo.Delete(c, ids); err != nil {
+		return e.ErrInternalServer().WithMsg("删除失败, 请稍后再试").WithErr(err)
+	}
+
+	return nil
 }
 
 func NewUmsRoleService(repo adminrepo.UmsRoleRepo) UmsRoleService {

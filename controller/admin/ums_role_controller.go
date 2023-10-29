@@ -30,8 +30,19 @@ func (rc *umsRoleController) AddRole(c *fiber.Ctx) error {
 }
 
 // DeleteRole 批量删除角色
-func (*umsRoleController) DeleteRole(c *fiber.Ctx) error {
-	panic("unimplemented")
+func (rc *umsRoleController) DeleteRole(c *fiber.Ctx) error {
+	data := &model.DelUmsRoleReq{}
+	if err := c.BodyParser(data); err != nil {
+		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
+	}
+	if len(data.Ids) <= 0 {
+		return response.Build(c, e.ErrInvalidRequestBody().WithMsg("角色ID不能为空"), nil)
+	}
+	if err := rc.service.BatchDeleteRole(c.Context(), data.Ids); err != nil {
+		return response.Build(c, err, nil)
+	}
+
+	return response.Build(c, nil, data)
 }
 
 // UpdateROle 更新角色信息
