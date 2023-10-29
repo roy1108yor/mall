@@ -20,10 +20,13 @@ import (
 var AdminProvider = wire.NewSet(
 	adminrepo.NewUmsAdminRepo,
 	adminrepo.NewUmsRoleRepo,
+	adminrepo.NewUmsMenuRepo,
 	adminsrv.NewUmsAdminService,
 	adminsrv.NewUmsRoleService,
+	adminsrv.NewUmsMenuService,
 	adminctrl.NewUmsAdminController,
 	adminctrl.NewUmsRoleController,
+	adminctrl.NewUmsMenuController,
 	adminv1.NewAdminAPIRouter,
 	adminrouter.NewAdminHTTPServer,
 )

@@ -5,10 +5,10 @@ import "time"
 type UmsMenu struct {
 	ID        uint      `xorm:"not null pk autoincr BIGINT(20) id comment('唯一标识')"`
 	ParentID  uint      `xorm:"no null BIGINT(20) parent_id comment('父级菜单ID')"`
-	Name      string    `xorm:"not null VARCHAR(50) name comment('菜单名称')"`
-	Level     int       `xorm:"not null INT level comment('菜单等级')"`
+	Name      string    `xorm:"not null VARCHAR(100) name comment('菜单名称')"`
+	Level     int       `xorm:"not null TINYINT(4) level comment('菜单等级')"`
 	Sort      int       `xorm:"not null TINYINT(1) sort comment('排序')"`
-	Icon      string    `xorm:"not null VARCHAR(10) icon comment('菜单图标')"`
+	Icon      string    `xorm:"not null VARCHAR(200) icon comment('菜单图标')"`
 	Hidden    int       `xorm:"not null TINYINT(1) hidden comment('是否显示')"`
 	CreatedAt time.Time `xorm:"created TIMESTAMP created_at comment('创建时间')"`
 	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at comment('更新时间')"`
