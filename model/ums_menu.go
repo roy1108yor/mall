@@ -25,6 +25,15 @@ type UmsMenuInReq struct {
 	Sort     int    `validate:"int" json:"sort"`
 }
 
+type UmsMenuNode struct {
+	ParentId uint           `json:"parentId"`
+	Name     string         `json:"name"`
+	Sort     int            `json:"sort"`
+	Icon     string         `json:"icon"`
+	Hidden   int            `json:"hidden"`
+	Children []*UmsMenuNode `json:"children"`
+}
+
 func (r *UmsMenu) TableName() string {
 	return "t_ums_menu"
 }

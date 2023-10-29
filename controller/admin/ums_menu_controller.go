@@ -15,6 +15,17 @@ type umsMenuController struct {
 
 type UmsMenuController interface {
 	AddMenu(c *fiber.Ctx) error
+	TreeList(c *fiber.Ctx) error
+}
+
+// TreeList implements UmsMenuController.
+func (mc *umsMenuController) TreeList(c *fiber.Ctx) error {
+	treeList, err := mc.service.ListWithTree(c.Context())
+	if err != nil {
+		return response.Build(c, err, nil)
+	}
+
+	return response.Build(c, nil, treeList)
 }
 
 // AddMenu implements UmsMenuController.

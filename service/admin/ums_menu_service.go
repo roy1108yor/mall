@@ -14,6 +14,7 @@ type umsMenuService struct {
 
 type UmsMenuService interface {
 	AddMenu(c context.Context, reqData *model.UmsMenuInReq) error
+	ListWithTree(c context.Context) ([]*model.UmsMenuNode, error)
 }
 
 // AddMenu 添加分类
@@ -23,6 +24,16 @@ func (ms *umsMenuService) AddMenu(c context.Context, reqData *model.UmsMenuInReq
 	}
 
 	return nil
+}
+
+// ListWithTree implements UmsMenuService.
+func (ms *umsMenuService) ListWithTree(c context.Context) ([]*model.UmsMenuNode, error) {
+	treeList, err := ms.repo.TreeList(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return treeList, nil
 }
 
 func NewUmsMenuService(repo adminrepo.UmsMenuRepo) UmsMenuService {
