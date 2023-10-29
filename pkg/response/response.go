@@ -9,13 +9,14 @@ import (
 )
 
 const (
-	SUCCESS = 0
-	FAIL    = -1
+	SUCCESS = 1
+	FAIL    = 0
 )
 
 type body struct {
 	Code    int    `json:"code"`
 	Success bool   `json:"success"`
+	Status  int    `json:"status"`
 	Msg     string `json:"msg"`
 	Data    any    `json:"data"`
 	Errs    any    `json:"errs"`
@@ -27,6 +28,7 @@ func Build(c *fiber.Ctx, err error, data any) error {
 		return c.JSON(&body{
 			Code:    SUCCESS,
 			Success: true,
+			Status:  http.StatusOK,
 			Msg:     "success",
 			Data:    data,
 			Errs:    nil,
@@ -40,6 +42,7 @@ func Build(c *fiber.Ctx, err error, data any) error {
 		return c.JSON(&body{
 			Code:    FAIL,
 			Success: false,
+			Status:  http.StatusInternalServerError,
 			Msg:     "Unknown Error",
 			Data:    nil,
 			Errs:    nil,
@@ -50,6 +53,7 @@ func Build(c *fiber.Ctx, err error, data any) error {
 	return c.JSON(&body{
 		Code:    FAIL,
 		Success: false,
+		Status:  myErr.Code,
 		Msg:     myErr.Msg,
 		Data:    data,
 		Errs:    myErr.Err,
