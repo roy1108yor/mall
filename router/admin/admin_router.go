@@ -22,5 +22,8 @@ func NewAdminHTTPServer(
 	// 注册菜单路由
 	apiRouter.RegisterMenuAPIRouter(v1Group.Group("/menu"))
 
+	// 注册资源路由
+	apiRouter.RegisterResourceAPIRouter(v1Group.Group("/resource"))
+
 	return app
 }
