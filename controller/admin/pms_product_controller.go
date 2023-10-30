@@ -10,7 +10,7 @@ type PmsProductController interface {
 }
 
 // Create implements PmsProductController.
-func (*pmsProductController) Create(c *fiber.Ctx) error {
+func (pc *pmsProductController) Create(c *fiber.Ctx) error {
 	panic("unimplemented")
 }
 
