@@ -13,6 +13,22 @@ type UmsResource struct {
 	DeletedAt   time.Time `xorm:"deleted DATETIME deleted_at"`
 }
 
+type UmsResourceInReq struct {
+	Name        string `json:"name" validate:"required" message:"required:{field} 必填项"`
+	URL         string `json:"url" validate:"required" message:"required:{field} 必填项"`
+	Description string `json:"description" validate:"required" message:"required:{field} 必填项"`
+	CategoryId  uint   `json:"categoryId" validate:"uint|min:0" message:"uint:{field} 必填且必须是数字类型|min:{field} 不能小于0"`
+}
+
 func (r *UmsResource) TableName() string {
 	return "t_ums_resource"
+}
+
+func (r *UmsResourceInReq) ToModel() *UmsResource {
+	return &UmsResource{
+		Name:        r.Name,
+		URL:         r.URL,
+		Description: r.Description,
+		CategoryID:  r.CategoryId,
+	}
 }
