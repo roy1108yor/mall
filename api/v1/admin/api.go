@@ -7,6 +7,7 @@ type AdminAPIRouter struct {
 	umsRoleController    adminctrl.UmsRoleController
 	umsMenuController    adminctrl.UmsMenuController
 	umsResourceControler adminctrl.UmsResourceController
+	pmsProductController adminctrl.PmsProductController
 }
 
 func NewAdminAPIRouter(
@@ -14,11 +15,13 @@ func NewAdminAPIRouter(
 	umsRoleController adminctrl.UmsRoleController,
 	umsMenuController adminctrl.UmsMenuController,
 	umsResourceControler adminctrl.UmsResourceController,
+	pmsProductController adminctrl.PmsProductController,
 ) *AdminAPIRouter {
 	return &AdminAPIRouter{
 		umsAdminController,
 		umsRoleController,
 		umsMenuController,
 		umsResourceControler,
+		pmsProductController,
 	}
 }

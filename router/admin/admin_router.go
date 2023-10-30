@@ -25,5 +25,8 @@ func NewAdminHTTPServer(
 	// 注册资源路由
 	apiRouter.RegisterResourceAPIRouter(v1Group.Group("/resource"))
 
+	// 注册商品路由
+	apiRouter.RegisterProductAPIRouter(v1Group.Group("/pms/product"))
+
 	return app
 }

@@ -40,7 +40,8 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 	umsResourceCategoryRepo := adminrepo.NewUmsResourceCategoryRepo(dataData)
 	umsResourceService := adminsrv.NewUmsResourceService(umsResourceRepo, umsResourceCategoryRepo)
 	umsResourceController := adminctrl.NewUmsResourceController(umsResourceService)
-	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController, umsRoleController, umsMenuController, umsResourceController)
+	pmsProductController := adminctrl.NewPmsProductController()
+	adminAPIRouter := adminv1.NewAdminAPIRouter(umsAdminController, umsRoleController, umsMenuController, umsResourceController, pmsProductController)
 	adminHTTPServer := adminrouter.NewAdminHTTPServer(adminAPIRouter)
 	mallAPIRouter := mallv1.NewMallAPIRouter()
 	mallHTTPServer := mallrouter.NewMallHTTPServer(mallAPIRouter)
@@ -52,6 +53,6 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 
 // wire.go:
 
-var AdminProvider = wire.NewSet(adminrepo.NewUmsAdminRepo, adminrepo.NewUmsRoleRepo, adminrepo.NewUmsMenuRepo, adminrepo.NewUmsResourceCategoryRepo, adminrepo.NewUmsResourceRepo, adminsrv.NewUmsAdminService, adminsrv.NewUmsRoleService, adminsrv.NewUmsMenuService, adminsrv.NewUmsResourceService, adminctrl.NewUmsAdminController, adminctrl.NewUmsRoleController, adminctrl.NewUmsMenuController, adminctrl.NewUmsResourceController, adminv1.NewAdminAPIRouter, adminrouter.NewAdminHTTPServer)
+var AdminProvider = wire.NewSet(adminrepo.NewUmsAdminRepo, adminrepo.NewUmsRoleRepo, adminrepo.NewUmsMenuRepo, adminrepo.NewUmsResourceCategoryRepo, adminrepo.NewUmsResourceRepo, adminsrv.NewUmsAdminService, adminsrv.NewUmsRoleService, adminsrv.NewUmsMenuService, adminsrv.NewUmsResourceService, adminctrl.NewUmsAdminController, adminctrl.NewUmsRoleController, adminctrl.NewUmsMenuController, adminctrl.NewUmsResourceController, adminctrl.NewPmsProductController, adminv1.NewAdminAPIRouter, adminrouter.NewAdminHTTPServer)
 
 var MallProvider = wire.NewSet(mallv1.NewMallAPIRouter, mallrouter.NewMallHTTPServer)

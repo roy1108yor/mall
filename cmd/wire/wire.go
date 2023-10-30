@@ -31,6 +31,7 @@ var AdminProvider = wire.NewSet(
 	adminctrl.NewUmsRoleController,
 	adminctrl.NewUmsMenuController,
 	adminctrl.NewUmsResourceController,
+	adminctrl.NewPmsProductController,
 	adminv1.NewAdminAPIRouter,
 	adminrouter.NewAdminHTTPServer,
 )
