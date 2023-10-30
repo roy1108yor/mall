@@ -35,6 +35,11 @@ type UmsAdminLoginResp struct {
 	Token    string `json:"token"`
 }
 
+type AllocRoleForAdminReq struct {
+	RoleIds []uint `json:"roleIds"`
+	UserId  uint   `json:"userId"`
+}
+
 func (u *UmsAdmin) TableName() string {
 	return "t_ums_admin"
 }

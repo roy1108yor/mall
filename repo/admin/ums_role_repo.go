@@ -21,6 +21,13 @@ type UmsRoleRepo interface {
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
 	RemoveByRoleId(c context.Context, id uint) error
 	BatchInsert(c context.Context, list []*model.UmsRoleMenuRelation) error
+	InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error
+}
+
+// InsertRoleRelationForAdmin 为后台用户分配角色
+func (repo *umsRoleRepo) InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error {
+	// 1. 先查找用户ID是否存在
+	panic("unimplemented")
 }
 
 // BatchInsert implements UmsRoleRepo.

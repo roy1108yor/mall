@@ -21,6 +21,12 @@ type umsAdminService struct {
 type UmsAdminService interface {
 	UmsAdminRegister(c context.Context, reqData *model.UmsAdminRegisterReq) error
 	UmsAdminLogin(c context.Context, reqData *model.UmsAdminLoginReq) (respData *model.UmsAdminLoginResp, err error)
+	AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error
+}
+
+// AllocRoleForAdmin 为后台用户分配角色
+func (as *umsAdminService) AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error {
+	panic("unimplemented")
 }
 
 // UmsAdminRegister implements UmsAdminService.

@@ -18,6 +18,23 @@ type umsAdminController struct {
 type UmsAdminController interface {
 	UmsAdminLogin(c *fiber.Ctx) error
 	UmsAdminRegister(c *fiber.Ctx) error
+	AllocRoleForAdmin(c *fiber.Ctx) error
+}
+
+// AllocRoleForAdmin 为用户分配角色
+func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
+	data := &model.UmsRoleRelationInReq{}
+	if err := c.BodyParser(data); err != nil {
+		return response.Build(c, e.ErrBadRequest().WithErr(err), nil)
+	}
+	if v := validate.Struct(data); !v.Validate() {
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
+	}
+	if err := ac.service.AllocRoleForAdmin(c.Context(), data); err != nil {
+		return response.Build(c, err, nil)
+	}
+
+	return response.Build(c, nil, nil)
 }
 
 // UmsAdminLogin 管理员登录
