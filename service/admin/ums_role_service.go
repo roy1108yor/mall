@@ -60,15 +60,15 @@ func (rs *umsRoleService) UpdateRole(c context.Context, reqData *model.UpdateUms
 
 // AddRole 添加一个角色
 func (rs *umsRoleService) AddRole(c context.Context, reqData *model.AddUmsRoleReq) error {
-	_, exists, err := rs.repo.SelectByRoleName(c, reqData.Name)
-	if err != nil {
-		return e.ErrInternalServer().WithMsg("创建角色失败, 请稍后再试")
-	}
+	_, exists, _ := rs.repo.SelectByRoleName(c, reqData.Name)
 	if exists {
 		return e.ErrBadRequest().WithMsg(fmt.Sprintf("roleName: %v, 角色名称以存在", reqData.Name))
 	}
+	if _, err := rs.repo.Create(c, reqData.ToModel()); err != nil {
+		return e.ErrInternalServer().WithMsg("创建角色失败, 请稍后再试~")
+	}
 
-	return rs.repo.Save(c, reqData.ToModel())
+	return nil
 }
 
 // BatchUpdateRole 删除角色, 支持批量删除

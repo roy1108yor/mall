@@ -13,7 +13,7 @@ type umsRoleRepo struct {
 }
 
 type UmsRoleRepo interface {
-	Save(c context.Context, role *model.UmsRole) error
+	Create(c context.Context, role *model.UmsRole) (int64, error)
 	Delete(c context.Context, ids []string) error
 	Update(c context.Context, role *model.UmsRole) error
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
@@ -22,7 +22,6 @@ type UmsRoleRepo interface {
 	RemoveByRoleId(c context.Context, id uint) error
 	BatchInsert(c context.Context, list []*model.UmsRoleMenuRelation) error
 	BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error)
-	InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error
 	SelectByIdsFromRoleRelation(c context.Context, ids []uint) (list []*model.UmsRoleRelation, err error)
 }
 
@@ -32,12 +31,6 @@ func (repo *umsRoleRepo) SelectByIdsFromRoleRelation(c context.Context, ids []ui
 	err = repo.data.DB.Context(c).Table(&model.UmsRoleRelation{}).Find(list)
 
 	return
-}
-
-// InsertRoleRelationForAdmin 为后台用户分配角色
-func (repo *umsRoleRepo) InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error {
-	// 1. 先查找用户ID是否存在
-	panic("unimplemented")
 }
 
 // BatchInsertRoleRelationForAdmin implements UmsRoleRepo.
@@ -84,12 +77,8 @@ func (repo *umsRoleRepo) Update(c context.Context, role *model.UmsRole) error {
 }
 
 // Save 创建一个角色
-func (repo *umsRoleRepo) Save(c context.Context, role *model.UmsRole) error {
-	if count, err := repo.data.DB.Context(c).Insert(role); err != nil && count <= 0 {
-		return err
-	}
-
-	return nil
+func (repo *umsRoleRepo) Create(c context.Context, role *model.UmsRole) (int64, error) {
+	return repo.data.DB.Context(c).Insert(role)
 }
 
 // Delete 批量删除角色
