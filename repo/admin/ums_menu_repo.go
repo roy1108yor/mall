@@ -16,6 +16,15 @@ type UmsMenuRepo interface {
 	Create(c context.Context, menu *model.UmsMenu) error
 	SelectById(c context.Context, id uint) (menu *model.UmsMenu, exists bool, err error)
 	TreeList(c context.Context) ([]*model.UmsMenuNode, error)
+	SelectList(c context.Context) (list []*model.UmsMenu, err error)
+}
+
+// SelectList 获取菜单列表
+func (repo *umsMenuRepo) SelectList(c context.Context) (list []*model.UmsMenu, err error) {
+	list = make([]*model.UmsMenu, 0)
+	err = repo.data.DB.Context(c).Table(&model.UmsMenu{}).Find(&list)
+
+	return
 }
 
 // SelectById implements UmsMenuRepo.
