@@ -28,9 +28,9 @@ func NewApp(config *viper.Viper) (*app.Server, func(), error) {
 		return nil, nil, err
 	}
 	umsAdminRepo := adminrepo.NewUmsAdminRepo(dataData)
-	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo, config)
-	umsAdminController := adminctrl.NewUmsAdminController(umsAdminService)
 	umsRoleRepo := adminrepo.NewUmsRoleRepo(dataData)
+	umsAdminService := adminsrv.NewUmsAdminService(umsAdminRepo, umsRoleRepo, config)
+	umsAdminController := adminctrl.NewUmsAdminController(umsAdminService)
 	umsRoleService := adminsrv.NewUmsRoleService(umsRoleRepo)
 	umsRoleController := adminctrl.NewUmsRoleController(umsRoleService)
 	umsMenuRepo := adminrepo.NewUmsMenuRepo(dataData)

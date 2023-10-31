@@ -21,13 +21,28 @@ type UmsRoleRepo interface {
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
 	RemoveByRoleId(c context.Context, id uint) error
 	BatchInsert(c context.Context, list []*model.UmsRoleMenuRelation) error
+	BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error)
 	InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error
+	SelectByIdsFromRoleRelation(c context.Context, ids []uint) (list []*model.UmsRoleRelation, err error)
+}
+
+// SelectByIdsFromRoleRelation implements UmsRoleRepo.
+func (repo *umsRoleRepo) SelectByIdsFromRoleRelation(c context.Context, ids []uint) (list []*model.UmsRoleRelation, err error) {
+	list = make([]*model.UmsRoleRelation, 0)
+	err = repo.data.DB.Context(c).Table(&model.UmsRoleRelation{}).Find(list)
+
+	return
 }
 
 // InsertRoleRelationForAdmin 为后台用户分配角色
 func (repo *umsRoleRepo) InsertRoleRelationForAdmin(c context.Context, relation *model.UmsRoleRelation) error {
 	// 1. 先查找用户ID是否存在
 	panic("unimplemented")
+}
+
+// BatchInsertRoleRelationForAdmin implements UmsRoleRepo.
+func (repo *umsRoleRepo) BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error) {
+	return repo.data.DB.Context(c).Table(&model.UmsRoleRelation{}).InsertMulti(list)
 }
 
 // BatchInsert implements UmsRoleRepo.

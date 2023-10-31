@@ -18,20 +18,6 @@ type UmsRoleService interface {
 	UpdateRole(c context.Context, reqData *model.UpdateUmsRoleReq) error
 	BatchDeleteRole(c context.Context, ids []string) error
 	AllocMenuForRole(c context.Context, reqData *model.AllocMenuForRoleReq) error
-	AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error
-}
-
-// AllocRoleForAdmin 为后台用户分配角色
-func (rs *umsRoleService) AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error {
-	// 1. 根据角色ID去查找
-	_, exists, err := rs.repo.SelectById(c, data.RoleId)
-	if err != nil {
-		return e.ErrInternalServer().WithMsg("分配角色失败, 请稍后再试~").WithErr(err)
-	}
-	if !exists {
-		return e.ErrNotFound().WithMsg(fmt.Sprintf("roleId: %v, 角色不存在", data.RoleId))
-	}
-	panic("unimplemented")
 }
 
 // AllocMenuForRole 为角色分配菜单

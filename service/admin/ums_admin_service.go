@@ -14,8 +14,9 @@ import (
 )
 
 type umsAdminService struct {
-	repo adminrepo.UmsAdminRepo
-	conf *viper.Viper
+	repo     adminrepo.UmsAdminRepo
+	roleRepo adminrepo.UmsRoleRepo
+	conf     *viper.Viper
 }
 
 type UmsAdminService interface {
@@ -26,7 +27,17 @@ type UmsAdminService interface {
 
 // AllocRoleForAdmin 为后台用户分配角色
 func (as *umsAdminService) AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error {
-	panic("unimplemented")
+	list := make([]*model.UmsRoleRelation, len(data.RoleIds))
+	for i, id := range data.RoleIds {
+		list[i] = new(model.UmsRoleRelation)
+		list[i].AdminId = data.AdminId
+		list[i].RoleId = id
+	}
+	if _, err := as.roleRepo.BatchInsertRoleRelationForAdmin(c, list); err != nil {
+		return e.ErrInternalServer().WithMsg("分配角色失败, 请稍后再试~").WithErr(err)
+	}
+
+	return nil
 }
 
 // UmsAdminRegister implements UmsAdminService.
@@ -82,6 +93,6 @@ func (us *umsAdminService) UmsAdminLogin(c context.Context, reqData *model.UmsAd
 	return respData, nil
 }
 
-func NewUmsAdminService(repo adminrepo.UmsAdminRepo, conf *viper.Viper) UmsAdminService {
-	return &umsAdminService{repo, conf}
+func NewUmsAdminService(repo adminrepo.UmsAdminRepo, roleRepo adminrepo.UmsRoleRepo, conf *viper.Viper) UmsAdminService {
+	return &umsAdminService{repo, roleRepo, conf}
 }

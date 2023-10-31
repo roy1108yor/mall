@@ -16,13 +16,6 @@ func (r *UmsRoleRelation) TableName() string {
 }
 
 type UmsRoleRelationInReq struct {
-	AdminId uint `json:"adminId" validate:"uint" message:"uint{field} 必填且是数字类型"`
-	RoleId  uint `json:"roleId" validate:"uint" message:"uint{field}  必填且是数字类型"`
-}
-
-func (r *UmsRoleRelationInReq) ToModel() *UmsRoleRelation {
-	return &UmsRoleRelation{
-		AdminId: r.AdminId,
-		RoleId:  r.RoleId,
-	}
+	AdminId uint   `json:"adminId" validate:"uint" message:"uint{field} 必填且是数字类型"`
+	RoleIds []uint `json:"roleIds"`
 }
