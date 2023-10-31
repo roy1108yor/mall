@@ -1,6 +1,7 @@
 package adminctrl
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,7 +32,7 @@ func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
 	}
 	if len(data.RoleIds) <= 0 {
-		return response.Build(c, e.ErrInvalidRequestBody().WithMsg("roleIds长度至少为1"), nil)
+		return response.Build(c, e.New(http.StatusBadRequest, "roleIds 必填项"), nil)
 	}
 	if err := ac.service.AllocRoleForAdmin(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)
