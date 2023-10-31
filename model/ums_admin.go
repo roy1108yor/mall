@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/kalougata/mall/pkg/hash"
+)
 
 type UmsAdmin struct {
 	ID          uint      `xorm:"not null pk autoincr BIGINT(20) id"`
@@ -22,13 +26,13 @@ type UmsAdminLoginReq struct {
 	LoginTime   time.Time `json:"-"`
 }
 
-type UmsAdminRegisterReq struct {
+type UmsAdminInReq struct {
 	UserName  string `json:"user_name" validate:"required|min_len:5" message:"required:{field} 必填|min_len:{field} 不能少于5个字符"`
 	PassWord  string `json:"password" validate:"required|min_len:6|max_len:20" message:"required:{field} 必填|min_len:{field} 不能少于6个字符|max_len:{field} 不能超过20个字符"`
 	RegIpAddr string `json:"-"`
 }
 
-type UmsAdminLoginResp struct {
+type UmsAdminLoginOut struct {
 	ID       uint   `json:"id"`
 	UserName string `json:"user_name"`
 	NickName string `json:"nick_name"`
@@ -42,4 +46,12 @@ type AllocRoleForAdminReq struct {
 
 func (u *UmsAdmin) TableName() string {
 	return "t_ums_admin"
+}
+
+func (r *UmsAdminInReq) ToModel() *UmsAdmin {
+	return &UmsAdmin{
+		UserName:  r.UserName,
+		Passwd:    hash.Gen(r.PassWord),
+		RegIpAddr: r.RegIpAddr,
+	}
 }

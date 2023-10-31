@@ -2,7 +2,6 @@ package adminrepo
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/kalougata/mall/model"
 	"github.com/kalougata/mall/pkg/data"
@@ -14,18 +13,13 @@ type umsAdminRepo struct {
 }
 
 type UmsAdminRepo interface {
-	Save(c context.Context, admin *model.UmsAdmin) error
+	Create(c context.Context, admin *model.UmsAdmin) (int64, error)
 	SelectByUserName(c context.Context, userName string) (result *model.UmsAdmin, exists bool, err error)
 }
 
-// Save implements UmsAdminRepo.
-func (repo *umsAdminRepo) Save(c context.Context, admin *model.UmsAdmin) error {
-	if _, err := repo.Data.DB.Context(c).Insert(admin); err != nil {
-		fmt.Println(err)
-		return e.ErrInternalServer().WithErr(err)
-	}
-
-	return nil
+// Create 创建一个用户
+func (repo *umsAdminRepo) Create(c context.Context, admin *model.UmsAdmin) (int64, error) {
+	return repo.Data.DB.Context(c).Insert(admin)
 }
 
 // SelectByUserName implements UmsAdminRepo.

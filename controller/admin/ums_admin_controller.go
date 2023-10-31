@@ -54,7 +54,7 @@ func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data.LoginIpAddr = c.IP()
 	data.LoginTime = time.Now()
 
-	if resp, err := uc.service.UmsAdminLogin(c.Context(), data); err == nil {
+	if resp, err := uc.service.Login(c.Context(), data); err == nil {
 		return response.Build(c, nil, resp)
 	} else {
 		return response.Build(c, err, resp)
@@ -63,7 +63,7 @@ func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 
 // UmsAdminRegister 管理员注册
 func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
-	data := &model.UmsAdminRegisterReq{}
+	data := &model.UmsAdminInReq{}
 	if err := c.BodyParser(data); err != nil {
 		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
 	}
@@ -71,10 +71,9 @@ func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	if v := validate.Struct(data); !v.Validate() {
 		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
 	}
-
 	data.RegIpAddr = c.IP()
-	if err := uc.service.UmsAdminRegister(c.Context(), data); err != nil {
-		return response.Build(c, e.ErrInternalServer().WithMsg("注册失败, 请稍后再试"), nil)
+	if err := uc.service.Register(c.Context(), data); err != nil {
+		return response.Build(c, err, nil)
 	}
 
 	return response.Build(c, nil, nil)

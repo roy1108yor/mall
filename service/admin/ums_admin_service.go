@@ -20,8 +20,8 @@ type umsAdminService struct {
 }
 
 type UmsAdminService interface {
-	UmsAdminRegister(c context.Context, reqData *model.UmsAdminRegisterReq) error
-	UmsAdminLogin(c context.Context, reqData *model.UmsAdminLoginReq) (respData *model.UmsAdminLoginResp, err error)
+	Register(c context.Context, reqData *model.UmsAdminInReq) error
+	Login(c context.Context, reqData *model.UmsAdminLoginReq) (respData *model.UmsAdminLoginOut, err error)
 	AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error
 }
 
@@ -40,27 +40,24 @@ func (as *umsAdminService) AllocRoleForAdmin(c context.Context, data *model.UmsR
 	return nil
 }
 
-// UmsAdminRegister implements UmsAdminService.
-func (us *umsAdminService) UmsAdminRegister(c context.Context, reqData *model.UmsAdminRegisterReq) error {
+// Register 后台用户注册
+func (us *umsAdminService) Register(c context.Context, reqData *model.UmsAdminInReq) error {
 	_, exists, err := us.repo.SelectByUserName(c, reqData.UserName)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return e.ErrNotFound().WithMsg("用户名已被注册, 请重新输入")
+		return e.ErrNotFound().WithMsg(fmt.Sprintf("UserName: %v 用户名已被注册", reqData.UserName))
+	}
+	if count, err := us.repo.Create(c, reqData.ToModel()); err != nil || count <= 0 {
+		return e.ErrInternalServer().WithMsg("注册失败, 请稍后再试~")
 	}
 
-	admin := &model.UmsAdmin{
-		UserName:  reqData.UserName,
-		Passwd:    hash.Gen(reqData.PassWord),
-		RegIpAddr: reqData.RegIpAddr,
-	}
-
-	return us.repo.Save(c, admin)
+	return nil
 }
 
-// UmsAdminLogin implements UmsAdminService.
-func (us *umsAdminService) UmsAdminLogin(c context.Context, reqData *model.UmsAdminLoginReq) (*model.UmsAdminLoginResp, error) {
+// Login 后台用户登录
+func (us *umsAdminService) Login(c context.Context, reqData *model.UmsAdminLoginReq) (*model.UmsAdminLoginOut, error) {
 	admin, exists, err := us.repo.SelectByUserName(c, reqData.UserName)
 	if !exists {
 		return nil, e.ErrNotFound().WithMsg("用户不存在, 可能未注册")
@@ -81,9 +78,9 @@ func (us *umsAdminService) UmsAdminLogin(c context.Context, reqData *model.UmsAd
 	// secret := us.conf.GetString("jwt.admin.secret")
 	token, err := jwt.GenToken(claims, time.Now().Add(time.Minute*10), "admin")
 	if err != nil {
-		fmt.Println(err)
+		return nil, e.ErrInternalServer().WithMsg("生成token失败")
 	}
-	respData := &model.UmsAdminLoginResp{
+	respData := &model.UmsAdminLoginOut{
 		ID:       admin.ID,
 		UserName: admin.UserName,
 		NickName: admin.NickName,
