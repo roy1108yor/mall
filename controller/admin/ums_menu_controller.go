@@ -20,7 +20,7 @@ type UmsMenuController interface {
 
 // TreeList implements UmsMenuController.
 func (mc *umsMenuController) TreeList(c *fiber.Ctx) error {
-	treeList, err := mc.service.ListWithTree(c.Context())
+	treeList, err := mc.service.TreeList(c.Context())
 	if err != nil {
 		return response.Build(c, err, nil)
 	}

@@ -14,7 +14,25 @@ type umsMenuService struct {
 
 type UmsMenuService interface {
 	AddMenu(c context.Context, reqData *model.UmsMenuInReq) error
-	ListWithTree(c context.Context) ([]*model.UmsMenuNode, error)
+	TreeList(c context.Context) (list []*model.UmsMenuNode, err error)
+}
+
+// TreeList 获取树形菜单列表
+func (ms *umsMenuService) TreeList(c context.Context) (list []*model.UmsMenuNode, err error) {
+	var menuList []*model.UmsMenu
+	menuList, err = ms.repo.SelectList(c)
+	if err != nil {
+		return nil, err
+	}
+	treeList := []*model.UmsMenuNode{}
+	for _, menu := range menuList {
+		if menu.ParentID == 0 {
+			node := convertMenuNode(menu, menuList)
+			treeList = append(treeList, node)
+		}
+	}
+
+	return treeList, nil
 }
 
 // AddMenu 添加分类
@@ -26,14 +44,24 @@ func (ms *umsMenuService) AddMenu(c context.Context, reqData *model.UmsMenuInReq
 	return nil
 }
 
-// ListWithTree implements UmsMenuService.
-func (ms *umsMenuService) ListWithTree(c context.Context) ([]*model.UmsMenuNode, error) {
-	treeList, err := ms.repo.TreeList(c)
-	if err != nil {
-		return nil, err
+func convertMenuNode(menu *model.UmsMenu, list []*model.UmsMenu) *model.UmsMenuNode {
+	node := &model.UmsMenuNode{
+		ParentId: menu.ParentID,
+		Name:     menu.Name,
+		Icon:     menu.Icon,
+		Sort:     menu.Sort,
+		Hidden:   menu.Hidden,
 	}
+	children := []*model.UmsMenuNode{}
+	for _, subMenu := range list {
+		if subMenu.ParentID == menu.ID {
+			child := convertMenuNode(subMenu, list)
+			children = append(children, child)
+		}
+	}
+	node.Children = children
 
-	return treeList, nil
+	return node
 }
 
 func NewUmsMenuService(repo adminrepo.UmsMenuRepo) UmsMenuService {
