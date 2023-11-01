@@ -47,7 +47,7 @@ func (us *umsAdminService) Register(c context.Context, reqData *model.UmsAdminIn
 		return err
 	}
 	if exists {
-		return e.ErrNotFound().WithMsg(fmt.Sprintf("UserName: %v 用户名已被注册", reqData.UserName))
+		return e.ErrBadRequest().WithMsg(fmt.Sprintf("UserName: %v 用户名已被注册", reqData.UserName))
 	}
 	if count, err := us.repo.Create(c, reqData.ToModel()); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithMsg("注册失败, 请稍后再试~")
