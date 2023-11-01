@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gookit/validate"
 	"github.com/kalougata/mall/model"
 	"github.com/kalougata/mall/pkg/e"
 	"github.com/kalougata/mall/pkg/response"
+	"github.com/kalougata/mall/pkg/validator"
 	adminsrv "github.com/kalougata/mall/service/admin"
 )
 
@@ -25,11 +25,8 @@ type UmsAdminController interface {
 // AllocRoleForAdmin 为用户分配角色
 func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 	data := &model.UmsRoleRelationInReq{}
-	if err := c.BodyParser(data); err != nil {
-		return response.Build(c, e.ErrBadRequest().WithErr(err), nil)
-	}
-	if v := validate.Struct(data); !v.Validate() {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
+	if err := validator.BindAndCheck(c, data); err != nil {
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
 	}
 	if len(data.RoleIds) <= 0 {
 		return response.Build(c, e.New(http.StatusBadRequest, "roleIds 必填项"), nil)
@@ -44,16 +41,12 @@ func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 // UmsAdminLogin 管理员登录
 func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data := &model.UmsAdminLoginReq{}
-	if err := c.BodyParser(data); err != nil {
-		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
-	}
-	if v := validate.Struct(data); !v.Validate() {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
+	if err := validator.BindAndCheck(c, data); err != nil {
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
 	}
 
 	data.LoginIpAddr = c.IP()
 	data.LoginTime = time.Now()
-
 	if resp, err := uc.service.Login(c.Context(), data); err == nil {
 		return response.Build(c, nil, resp)
 	} else {
@@ -64,12 +57,8 @@ func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 // UmsAdminRegister 管理员注册
 func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	data := &model.UmsAdminInReq{}
-	if err := c.BodyParser(data); err != nil {
-		return response.Build(c, e.ErrBadRequest().WithMsg(err.Error()), nil)
-	}
-
-	if v := validate.Struct(data); !v.Validate() {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(v.Errors), nil)
+	if err := validator.BindAndCheck(c, data); err != nil {
+		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
 	}
 	data.RegIpAddr = c.IP()
 	if err := uc.service.Register(c.Context(), data); err != nil {
