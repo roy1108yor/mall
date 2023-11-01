@@ -3,7 +3,6 @@ package adminctrl
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalougata/mall/model"
-	"github.com/kalougata/mall/pkg/e"
 	"github.com/kalougata/mall/pkg/response"
 	"github.com/kalougata/mall/pkg/validator"
 	adminsrv "github.com/kalougata/mall/service/admin"
@@ -32,7 +31,7 @@ func (mc *umsMenuController) TreeList(c *fiber.Ctx) error {
 func (mc *umsMenuController) AddMenu(c *fiber.Ctx) error {
 	data := &model.UmsMenuInReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
 	if err := mc.service.AddMenu(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)

@@ -26,7 +26,7 @@ type UmsAdminController interface {
 func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 	data := &model.UmsRoleRelationInReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
 	if len(data.RoleIds) <= 0 {
 		return response.Build(c, e.New(http.StatusBadRequest, "roleIds 必填项"), nil)
@@ -42,7 +42,7 @@ func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 	data := &model.UmsAdminLoginReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
 
 	data.LoginIpAddr = c.IP()
@@ -58,7 +58,7 @@ func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
 func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
 	data := &model.UmsAdminInReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
 	data.RegIpAddr = c.IP()
 	if err := uc.service.Register(c.Context(), data); err != nil {

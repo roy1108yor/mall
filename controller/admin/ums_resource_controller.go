@@ -3,7 +3,6 @@ package adminctrl
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalougata/mall/model"
-	"github.com/kalougata/mall/pkg/e"
 	"github.com/kalougata/mall/pkg/response"
 	"github.com/kalougata/mall/pkg/validator"
 	adminsrv "github.com/kalougata/mall/service/admin"
@@ -22,9 +21,8 @@ type UmsResourceController interface {
 func (rc *umsResourceController) AddResource(c *fiber.Ctx) error {
 	data := &model.UmsResourceInReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
-
 	if err := rc.service.AddResource(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)
 	}
@@ -36,9 +34,8 @@ func (rc *umsResourceController) AddResource(c *fiber.Ctx) error {
 func (rc *umsResourceController) AddResourceCategory(c *fiber.Ctx) error {
 	data := &model.UmsResourceCategoryInReq{}
 	if err := validator.BindAndCheck(c, data); err != nil {
-		return response.Build(c, e.ErrInvalidRequestBody().WithErr(err), nil)
+		return response.Build(c, err, nil)
 	}
-
 	if err := rc.service.AddRecourceCategory(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)
 	}
