@@ -42,7 +42,7 @@ func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.All
 		list[i].MenuId = v
 	}
 
-	if err := rs.repo.BatchInsertRoleMenuRelationForRole(c, list); err != nil {
+	if _, err := rs.repo.BatchInsertRoleMenuRelationForRole(c, list); err != nil {
 		return e.ErrInternalServer().WithMsg("分配菜单失败, 请稍后再试").WithErr(err)
 	}
 
