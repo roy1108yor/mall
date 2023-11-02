@@ -40,27 +40,29 @@ func (ac *umsAdminController) AllocRoleForAdmin(c *fiber.Ctx) error {
 
 // UmsAdminLogin 管理员登录
 func (uc *umsAdminController) UmsAdminLogin(c *fiber.Ctx) error {
-	data := &model.UmsAdminLoginReq{}
+	data := &model.UmsAdminLoginReq{
+		LoginIpAddr: c.IP(),
+		LoginTime:   time.Now(),
+	}
 	if err := validator.BindAndCheck(c, data); err != nil {
 		return response.Build(c, err, nil)
 	}
-
-	data.LoginIpAddr = c.IP()
-	data.LoginTime = time.Now()
-	if resp, err := uc.service.Login(c.Context(), data); err == nil {
-		return response.Build(c, nil, resp)
-	} else {
-		return response.Build(c, err, resp)
+	resp, err := uc.service.Login(c.Context(), data)
+	if err != nil {
+		return response.Build(c, err, nil)
 	}
+
+	return response.Build(c, nil, resp)
 }
 
 // UmsAdminRegister 管理员注册
 func (uc *umsAdminController) UmsAdminRegister(c *fiber.Ctx) error {
-	data := &model.UmsAdminInReq{}
+	data := &model.UmsAdminInReq{
+		RegIpAddr: c.IP(),
+	}
 	if err := validator.BindAndCheck(c, data); err != nil {
 		return response.Build(c, err, nil)
 	}
-	data.RegIpAddr = c.IP()
 	if err := uc.service.Register(c.Context(), data); err != nil {
 		return response.Build(c, err, nil)
 	}
