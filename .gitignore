@@ -23,3 +23,6 @@ go.work
 # config file
 config-dev.yaml
 config-prod.yaml
+
+# idea
+.idea
