@@ -19,18 +19,9 @@ type UmsRoleRepo interface {
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
 	SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error)
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
-	RemoveByRoleId(c context.Context, id uint) error
+	RemoveRoleMenuRelationByRoleId(c context.Context, id uint) (int64, error)
 	BatchInsertRoleMenuRelationForRole(c context.Context, list []*model.UmsRoleMenuRelation) (int64, error)
 	BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error)
-	SelectByIdsFromRoleRelation(c context.Context, ids []uint) (list []*model.UmsRoleRelation, err error)
-}
-
-// SelectByIdsFromRoleRelation implements UmsRoleRepo.
-func (repo *umsRoleRepo) SelectByIdsFromRoleRelation(c context.Context, ids []uint) (list []*model.UmsRoleRelation, err error) {
-	list = make([]*model.UmsRoleRelation, 0)
-	err = repo.data.DB.Context(c).Table(&model.UmsRoleRelation{}).Find(list)
-
-	return
 }
 
 // BatchInsertRoleRelationForAdmin implements UmsRoleRepo.
@@ -44,12 +35,8 @@ func (repo *umsRoleRepo) BatchInsertRoleMenuRelationForRole(c context.Context, l
 }
 
 // RemoveById implements UmsRoleRepo.
-func (repo *umsRoleRepo) RemoveByRoleId(c context.Context, roleId uint) error {
-	if _, err := repo.data.DB.Context(c).Table(&model.UmsRoleMenuRelation{}).Where("role_id = ?", roleId).Delete(&model.UmsRoleMenuRelation{}); err != nil {
-		return err
-	}
-
-	return nil
+func (repo *umsRoleRepo) RemoveRoleMenuRelationByRoleId(c context.Context, roleId uint) (int64, error) {
+	return repo.data.DB.Context(c).Table(&model.UmsRoleMenuRelation{}).Where("role_id = ?", roleId).Delete(&model.UmsRoleMenuRelation{})
 }
 
 // SelectById 根据角色ID查找
