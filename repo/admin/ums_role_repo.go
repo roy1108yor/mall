@@ -17,7 +17,6 @@ type UmsRoleRepo interface {
 	Delete(c context.Context, ids []string) error
 	Update(c context.Context, role *model.UmsRole) error
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
-	SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error)
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
 	RemoveRoleMenuRelationByRoleId(c context.Context, id uint) (int64, error)
 	BatchInsertRoleMenuRelationForRole(c context.Context, list []*model.UmsRoleMenuRelation) (int64, error)
@@ -56,7 +55,7 @@ func (repo *umsRoleRepo) Update(c context.Context, role *model.UmsRole) error {
 	return nil
 }
 
-// Save 创建一个角色
+// Create 创建一个角色
 func (repo *umsRoleRepo) Create(c context.Context, role *model.UmsRole) (int64, error) {
 	return repo.data.DB.Context(c).Insert(role)
 }
@@ -68,16 +67,6 @@ func (repo *umsRoleRepo) Delete(c context.Context, ids []string) error {
 	}
 
 	return nil
-}
-
-func (repo *umsRoleRepo) SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error) {
-	list := make([]*model.UmsRole, 0)
-	err := repo.data.DB.Context(c).In("id", ids).Find(&list)
-	if err != nil {
-		return nil, err
-	}
-
-	return list, nil
 }
 
 // SelectByRoleName 根据角色名称查找角色
