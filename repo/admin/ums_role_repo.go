@@ -24,17 +24,14 @@ type UmsRoleRepo interface {
 	BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error)
 }
 
-// BatchInsertRoleRelationForAdmin implements UmsRoleRepo.
 func (repo *umsRoleRepo) BatchInsertRoleRelationForAdmin(c context.Context, list []*model.UmsRoleRelation) (int64, error) {
 	return repo.data.DB.Context(c).Table(&model.UmsRoleRelation{}).InsertMulti(list)
 }
 
-// BatchInsertRoleMenuRelationForRole implements UmsRoleRepo.
 func (repo *umsRoleRepo) BatchInsertRoleMenuRelationForRole(c context.Context, list []*model.UmsRoleMenuRelation) (int64, error) {
 	return repo.data.DB.Context(c).Table(&model.UmsRoleMenuRelation{}).InsertMulti(list)
 }
 
-// RemoveById implements UmsRoleRepo.
 func (repo *umsRoleRepo) RemoveRoleMenuRelationByRoleId(c context.Context, roleId uint) (int64, error) {
 	return repo.data.DB.Context(c).Table(&model.UmsRoleMenuRelation{}).Where("role_id = ?", roleId).Delete(&model.UmsRoleMenuRelation{})
 }
@@ -73,7 +70,6 @@ func (repo *umsRoleRepo) Delete(c context.Context, ids []string) error {
 	return nil
 }
 
-// SelectList implements UmsRoleRepo.
 func (repo *umsRoleRepo) SelectList(c context.Context, ids ...string) ([]*model.UmsRole, error) {
 	list := make([]*model.UmsRole, 0)
 	err := repo.data.DB.Context(c).In("id", ids).Find(&list)
