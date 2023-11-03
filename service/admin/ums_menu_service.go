@@ -24,7 +24,7 @@ func (ms *umsMenuService) TreeList(c context.Context) (list []*model.UmsMenuNode
 	if err != nil {
 		return nil, err
 	}
-	treeList := []*model.UmsMenuNode{}
+	var treeList []*model.UmsMenuNode
 	for _, menu := range menuList {
 		if menu.ParentID == 0 {
 			node := convertMenuNode(menu, menuList)
@@ -37,7 +37,7 @@ func (ms *umsMenuService) TreeList(c context.Context) (list []*model.UmsMenuNode
 
 // AddMenu 添加分类
 func (ms *umsMenuService) AddMenu(c context.Context, reqData *model.UmsMenuInReq) error {
-	if err := ms.repo.Create(c, reqData.ToModel()); err != nil {
+	if count, err := ms.repo.Create(c, reqData.ToModel()); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithMsg("添加分类失败, 请稍后再试")
 	}
 
@@ -52,7 +52,7 @@ func convertMenuNode(menu *model.UmsMenu, list []*model.UmsMenu) *model.UmsMenuN
 		Sort:     menu.Sort,
 		Hidden:   menu.Hidden,
 	}
-	children := []*model.UmsMenuNode{}
+	var children []*model.UmsMenuNode
 	for _, subMenu := range list {
 		if subMenu.ParentID == menu.ID {
 			child := convertMenuNode(subMenu, list)

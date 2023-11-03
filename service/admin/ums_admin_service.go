@@ -26,14 +26,14 @@ type UmsAdminService interface {
 }
 
 // AllocRoleForAdmin 为后台用户分配角色
-func (as *umsAdminService) AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error {
+func (us *umsAdminService) AllocRoleForAdmin(c context.Context, data *model.UmsRoleRelationInReq) error {
 	list := make([]*model.UmsRoleRelation, len(data.RoleIds))
 	for i, id := range data.RoleIds {
 		list[i] = new(model.UmsRoleRelation)
 		list[i].AdminId = data.AdminId
 		list[i].RoleId = id
 	}
-	if _, err := as.roleRepo.BatchInsertRoleRelationForAdmin(c, list); err != nil {
+	if _, err := us.roleRepo.BatchInsertRoleRelationForAdmin(c, list); err != nil {
 		return e.ErrInternalServer().WithMsg("分配角色失败, 请稍后再试~").WithErr(err)
 	}
 

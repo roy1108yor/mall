@@ -22,7 +22,7 @@ func (repo *umsAdminRepo) Create(c context.Context, admin *model.UmsAdmin) (int6
 	return repo.Data.DB.Context(c).Insert(admin)
 }
 
-// SelectByUserName implements UmsAdminRepo.
+// SelectByUserName 根据用户名查找用户
 func (repo *umsAdminRepo) SelectByUserName(c context.Context, userName string) (result *model.UmsAdmin, exists bool, err error) {
 	result = &model.UmsAdmin{}
 	exists, err = repo.DB.Context(c).Where("user_name = ?", userName).Get(result)

@@ -49,9 +49,9 @@ func (rs *umsRoleService) AllocMenuForRole(c context.Context, reqData *model.All
 	return nil
 }
 
-// UpdateRole implements UmsRoleService.
+// UpdateRole 更新角色信息
 func (rs *umsRoleService) UpdateRole(c context.Context, reqData *model.UpdateUmsRoleReq) error {
-	if err := rs.repo.Update(c, reqData.ToModel()); err != nil {
+	if count, err := rs.repo.Update(c, reqData.ToModel()); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithMsg("更新角色失败, 请稍后再试")
 	}
 
@@ -71,9 +71,9 @@ func (rs *umsRoleService) AddRole(c context.Context, reqData *model.AddUmsRoleRe
 	return nil
 }
 
-// BatchUpdateRole 删除角色, 支持批量删除
+// BatchDeleteRole 删除角色，支持批量删除
 func (rs *umsRoleService) BatchDeleteRole(c context.Context, ids []string) error {
-	if err := rs.repo.Delete(c, ids); err != nil {
+	if count, err := rs.repo.Delete(c, ids); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithMsg("删除失败, 请稍后再试").WithErr(err)
 	}
 

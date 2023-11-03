@@ -14,8 +14,8 @@ type umsRoleRepo struct {
 
 type UmsRoleRepo interface {
 	Create(c context.Context, role *model.UmsRole) (int64, error)
-	Delete(c context.Context, ids []string) error
-	Update(c context.Context, role *model.UmsRole) error
+	Delete(c context.Context, ids []string) (int64, error)
+	Update(c context.Context, role *model.UmsRole) (int64, error)
 	SelectByRoleName(c context.Context, roleName string) (result *model.UmsRole, exists bool, err error)
 	SelectById(c context.Context, id uint) (result *model.UmsRole, exists bool, err error)
 	RemoveRoleMenuRelationByRoleId(c context.Context, id uint) (int64, error)
@@ -47,12 +47,8 @@ func (repo *umsRoleRepo) SelectById(c context.Context, id uint) (result *model.U
 }
 
 // Update 更新一个角色
-func (repo *umsRoleRepo) Update(c context.Context, role *model.UmsRole) error {
-	if count, err := repo.data.DB.Context(c).AllCols().ID(role.ID).Update(role); err != nil && count <= 0 {
-		return err
-	}
-
-	return nil
+func (repo *umsRoleRepo) Update(c context.Context, role *model.UmsRole) (int64, error) {
+	return repo.data.DB.Context(c).AllCols().ID(role.ID).Update(role)
 }
 
 // Create 创建一个角色
@@ -61,12 +57,8 @@ func (repo *umsRoleRepo) Create(c context.Context, role *model.UmsRole) (int64, 
 }
 
 // Delete 批量删除角色
-func (repo *umsRoleRepo) Delete(c context.Context, ids []string) error {
-	if count, err := repo.data.DB.Context(c).In("id", ids).Delete(&model.UmsRole{}); err != nil && count <= 0 {
-		return err
-	}
-
-	return nil
+func (repo *umsRoleRepo) Delete(c context.Context, ids []string) (int64, error) {
+	return repo.data.DB.Context(c).In("id", ids).Delete(&model.UmsRole{})
 }
 
 // SelectByRoleName 根据角色名称查找角色

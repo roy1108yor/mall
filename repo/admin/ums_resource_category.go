@@ -12,16 +12,12 @@ type umsResourceCategoryRepo struct {
 }
 
 type UmsResourceCategoryRepo interface {
-	Create(c context.Context, category *model.UmsResourceCategory) error
+	Create(c context.Context, category *model.UmsResourceCategory) (int64, error)
 }
 
-// Create implements UmsResourceCategoryRepo.
-func (repo *umsResourceCategoryRepo) Create(c context.Context, category *model.UmsResourceCategory) error {
-	if _, err := repo.data.DB.Context(c).Table(&model.UmsResourceCategory{}).Insert(category); err != nil {
-		return err
-	}
-
-	return nil
+// Create 创建资源分类
+func (repo *umsResourceCategoryRepo) Create(c context.Context, category *model.UmsResourceCategory) (int64, error) {
+	return repo.data.DB.Context(c).Table(&model.UmsResourceCategory{}).Insert(category)
 }
 
 func NewUmsResourceCategoryRepo(data *data.Data) UmsResourceCategoryRepo {

@@ -15,21 +15,21 @@ type umsResourceService struct {
 
 type UmsResourceService interface {
 	AddResource(c context.Context, data *model.UmsResourceInReq) error
-	AddRecourceCategory(c context.Context, data *model.UmsResourceCategoryInReq) error
+	AddResourceCategory(c context.Context, data *model.UmsResourceCategoryInReq) error
 }
 
-// AddRecourceCategory implements UmsResourceService.
-func (rs *umsResourceService) AddRecourceCategory(c context.Context, data *model.UmsResourceCategoryInReq) error {
-	if err := rs.resourceCategoryRepo.Create(c, data.ToModel()); err != nil {
+// AddResourceCategory 添加资源分类
+func (rs *umsResourceService) AddResourceCategory(c context.Context, data *model.UmsResourceCategoryInReq) error {
+	if count, err := rs.resourceCategoryRepo.Create(c, data.ToModel()); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithErr(err).WithMsg("添加资源分类失败, 请稍后再试~")
 	}
 
 	return nil
 }
 
-// AddResource implements UmsResourceService.
+// AddResource 添加资源
 func (rs *umsResourceService) AddResource(c context.Context, data *model.UmsResourceInReq) error {
-	if err := rs.resourceRepo.Create(c, data.ToModel()); err != nil {
+	if count, err := rs.resourceRepo.Create(c, data.ToModel()); err != nil || count <= 0 {
 		return e.ErrInternalServer().WithErr(err).WithMsg("添加资源失败, 请稍后再试~")
 	}
 

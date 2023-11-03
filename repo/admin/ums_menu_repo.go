@@ -12,7 +12,7 @@ type umsMenuRepo struct {
 }
 
 type UmsMenuRepo interface {
-	Create(c context.Context, menu *model.UmsMenu) error
+	Create(c context.Context, menu *model.UmsMenu) (int64, error)
 	SelectList(c context.Context) (list []*model.UmsMenu, err error)
 }
 
@@ -25,12 +25,8 @@ func (repo *umsMenuRepo) SelectList(c context.Context) (list []*model.UmsMenu, e
 }
 
 // Create 创建菜单
-func (repo *umsMenuRepo) Create(c context.Context, menu *model.UmsMenu) error {
-	if _, err := repo.data.DB.Context(c).Insert(menu); err != nil {
-		return err
-	}
-
-	return nil
+func (repo *umsMenuRepo) Create(c context.Context, menu *model.UmsMenu) (int64, error) {
+	return repo.data.DB.Context(c).Insert(menu)
 }
 
 func NewUmsMenuRepo(data *data.Data) UmsMenuRepo {
